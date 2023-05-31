@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import UserContext from './UserContext';
 import Cards from './Cards';
+import Search from './Search';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -7,7 +9,10 @@ const API_URL = process.env.REACT_APP_API_URL;
 function FileUpload() {
   const [file, setFile] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
+  // const [users, setUsers] = useContext(UserContext);
+
+  const [users, setUsers] = useContext(UserContext);
 
   const fileSelectedHandler = (event) => {
     setFile(event.target.files[0]);
@@ -25,23 +30,23 @@ function FileUpload() {
     const fileType = file.name.split('.').pop();
     const allowedFileTypes = ['csv'];
     if (!allowedFileTypes.includes(fileType)) {
-      setData([]);
+      setUsers([]);
       setResultMessage("Please provide only CSV files");
       return;
     }
 
     try {
       const response = await fetch(`${API_URL}/api/files`, {
-      method: 'POST',
-      body: formData
-    });
-    const data = await response.json();
-    setData(data);
-    console.log(data);
-    setResultMessage("File sucessfully uploaded!");
+        method: 'POST',
+        body: formData
+      });
+      const users = await response.json();
+      setUsers(users);
+      console.log(users);
+      setResultMessage("File sucessfully uploaded!");
     } catch (e) {
       console.log(e);
-      setData([]);
+      setUsers([]);
       setResultMessage("Internal error related to upload/API occurred");
     }
   }
@@ -55,7 +60,12 @@ function FileUpload() {
         {resultMessage}
       </p>
 
-      {data.length > 0 ? <Cards data={data} /> : null}
+      {users.length > 0 ?
+      <>
+        <Cards data={users} />
+        <Search />
+      </>
+      : null}
     </>
   )
 }
