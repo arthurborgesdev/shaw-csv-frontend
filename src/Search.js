@@ -6,17 +6,17 @@ const API_URL = process.env.REACT_APP_API_URL;
 function Search() {
   const [searchTerm, setSearchTerm] = useState("");
   const [resultMessage, setResultMessage] = useState("");
-  // const [data, setData] = useState([]);
   const [, setUsers] = useContext(UserContext);
 
   const searchHandler = async () => {
     if (!searchTerm) {
+      setUsers([]);
       setResultMessage("Please provide a search term");
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/search?searchTerm=${searchTerm}`);
+      const response = await fetch(`${API_URL}/api/users?q=${searchTerm}`);
       const users = await response.json();
       setUsers(users);
       console.log(users);

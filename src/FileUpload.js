@@ -9,8 +9,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 function FileUpload() {
   const [file, setFile] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
-  // const [data, setData] = useState([]);
-  // const [users, setUsers] = useContext(UserContext);
 
   const [users, setUsers] = useContext(UserContext);
 
@@ -62,8 +60,8 @@ function FileUpload() {
 
       {users.length > 0 ?
       <>
-        <Cards data={users} />
         <Search />
+        <Cards data={users} />
       </>
       : null}
     </>
