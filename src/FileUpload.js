@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import UserContext from './UserContext';
 import Cards from './Cards';
+import Search from './Search';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -7,7 +9,8 @@ const API_URL = process.env.REACT_APP_API_URL;
 function FileUpload() {
   const [file, setFile] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
-  const [data, setData] = useState([]);
+
+  const [users, setUsers] = useContext(UserContext);
 
   const fileSelectedHandler = (event) => {
     setFile(event.target.files[0]);
@@ -25,37 +28,43 @@ function FileUpload() {
     const fileType = file.name.split('.').pop();
     const allowedFileTypes = ['csv'];
     if (!allowedFileTypes.includes(fileType)) {
-      setData([]);
+      setUsers([]);
       setResultMessage("Please provide only CSV files");
       return;
     }
 
     try {
       const response = await fetch(`${API_URL}/api/files`, {
-      method: 'POST',
-      body: formData
-    });
-    const data = await response.json();
-    setData(data);
-    console.log(data);
-    setResultMessage("File sucessfully uploaded!");
+        method: 'POST',
+        body: formData
+      });
+      const users = await response.json();
+      setUsers(users);
+      setResultMessage("File successfully uploaded!");
     } catch (e) {
-      console.log(e);
-      setData([]);
+      setUsers([]);
       setResultMessage("Internal error related to upload/API occurred");
     }
   }
 
   return (
     <>
-      <p>CSV Uploader</p>
-      <input type="file" name="csv-file" onChange={fileSelectedHandler} />
+      <h2>CSV Uploader</h2>
+      <label htmlFor="csv-file">
+        CSV File
+        <input type="file" id='csv-file' className="file-input" onChange={fileSelectedHandler} />
+      </label>
       <button onClick={fileUploadHandler}>Load CSV</button>
       <p className='result-message'>
         {resultMessage}
       </p>
 
-      {data.length > 0 ? <Cards data={data} /> : null}
+      {users.length > 0 ?
+      <>
+        <Search />
+        <Cards data={users} />
+      </>
+      : null}
     </>
   )
 }
