@@ -40,10 +40,8 @@ function FileUpload() {
       });
       const users = await response.json();
       setUsers(users);
-      console.log(users);
-      setResultMessage("File sucessfully uploaded!");
+      setResultMessage("File successfully uploaded!");
     } catch (e) {
-      console.log(e);
       setUsers([]);
       setResultMessage("Internal error related to upload/API occurred");
     }
@@ -51,8 +49,11 @@ function FileUpload() {
 
   return (
     <>
-      <p>CSV Uploader</p>
-      <input type="file" name="csv-file" onChange={fileSelectedHandler} />
+      <h2>CSV Uploader</h2>
+      <label htmlFor="csv-file">
+        CSV File
+        <input type="file" id='csv-file' className="file-input" onChange={fileSelectedHandler} />
+      </label>
       <button onClick={fileUploadHandler}>Load CSV</button>
       <p className='result-message'>
         {resultMessage}

@@ -21,10 +21,8 @@ function Search() {
       const response = await fetch(`${API_URL}/api/users?q=${searchQuery}`);
       const users = await response.json();
       setUsers(users);
-      console.log(users);
       setResultMessage("Search completed!");
     } catch (e) {
-      console.log(e);
       setUsers([]);
       setResultMessage("Internal error related to search/API occurred");
     }
@@ -32,8 +30,12 @@ function Search() {
 
   return (
     <>
-      <p>Search</p>
-      <input type="text" name="search-term" onChange={(e) => setSearchTerm(e.target.value)} />
+      <h2>Search</h2>
+      <label htmlFor="search-term" className="search-label">
+        Search term
+        <input type="text" id="search-term" onChange={(e) => setSearchTerm(e.target.value)} />
+      </label>
+
       <button onClick={searchHandler}>Search</button>
       <p className='result-message'>
         {resultMessage}
