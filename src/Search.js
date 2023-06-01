@@ -1,6 +1,8 @@
 import React, {useState, useContext} from 'react';
 import UserContext from './UserContext';
 
+import searchParse from './utils/searchParse';
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 function Search() {
@@ -10,13 +12,13 @@ function Search() {
 
   const searchHandler = async () => {
     if (!searchTerm) {
-      setUsers([]);
       setResultMessage("Please provide a search term");
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/users?q=${searchTerm}`);
+      const searchQuery = searchParse(searchTerm);
+      const response = await fetch(`${API_URL}/api/users?q=${searchQuery}`);
       const users = await response.json();
       setUsers(users);
       console.log(users);
